@@ -1,0 +1,12 @@
+[package]
+name = "manda-bot"
+version = "0.1.0"
+authors = ["Sergey Duck <sergeypechnikov326@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+vkapi = {git="https://github.com/duckerman/vk_api", branch="beta"}
+tokio = { version = "0.2", features = ["full"] }
+rand = "*"

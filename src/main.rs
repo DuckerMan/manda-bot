@@ -6,7 +6,7 @@ use rand::Rng;
 pub const MESSAGES: &[&str] = &["Манда", "Хуй на", "Пизда", "Провода", "еда", "балда", "банда", "барда", "брада", "будда", "бурда", "вайда", "ванда", "вежда", "венда", "гайда", "ганда", "гарда", "гнида", "груда", "гряда", "дылда", "ехида", "жажда", "жеода", "заеда", "карда", "когда", "корда", "лайда", "магда", "морда", "мунда", "мурда", "наяда", "нужда", "обида", "осада", "панда", "рында", "сайда", "свида", "слада", "слюда", "спида", "среда", "ссуда", "тогда", "тында", "угода", "упада", "файда", "фалда", "фиада", "халда", "хорда", "хурда", "чреда", "шкода", "эгида", "ябеда", "ягода"];
 pub const MANDA_DETECTOR: &[&str] = &["да", "da", "дa", "dа", "д@", "d@"];
 pub const CASINO_DETECTOR: &[&str] = &["Казик", "казино", "карт", "казинo", "кaзинo", "ебанный"];
-
+pub const DONT_BE_AFRAID: &[&str] = &["Never mind the darkness", "Never mind the storm", "Never mind the blood red moon", "The Night will be over soon", "Brush away your sorrow", "Brush away your tears", "Sign away with your heavy heart", "The Night will be over soon", "The sun will be rising soon"];
 pub const YASNO: &[&str] = &["Хуясно", "Хуй с маслом!"];
 pub const YOBANNIY_WROTE_ETOGO_KAZINO: &str = "– Ёбаный рот этого казино, блядь! Ты кто такой, сука, чтоб это сделать?
 
@@ -38,6 +38,7 @@ async fn main() {
     for (event, data) in events {
         match event {
             EventType::NewMessage => {
+                let mut attachment = "".to_owned();
                 let random_id: u32 = rng.gen();
                 let random_id = random_id.to_string();
                 let msg = &data["message"];
@@ -69,8 +70,19 @@ async fn main() {
                 if user_message.contains("ты"){
                     message_for_send = "Тебя затыкали коТЫ!".to_owned();
                 }
+                if user_message.contains("Clem"){
+                    message_for_send = "Опять этот долбаеб со своим говном пришел".to_owned();
+                }
+                if user_message.contains("mind"){
+                    message_for_send = DONT_BE_AFRAID[rng.gen_range(0, DONT_BE_AFRAID.len()-1)].to_owned();
+                    
+                }
+                if user_message.contains("still"){
+                    message_for_send = "STILL. NOT. BITTEN".to_owned();
+                    attachment = "photo164124208_457256690".to_owned();
+                }
                 if !message_for_send.is_empty(){
-                    vkapi.request("messages.send", &mut param! {"random_id" => &random_id, "forward_messages" => &(peer_id+message_id).to_string(), "peer_id" => &peer_id.to_string(), "message" => &message_for_send}).await.unwrap();
+                    vkapi.request("messages.send", &mut param! {"attachment" => &attachment ,"random_id" => &random_id, "forward_messages" => &(peer_id+message_id).to_string(), "peer_id" => &peer_id.to_string(), "message" => &message_for_send}).await.unwrap();
                 }
             },
             _ => {}
